@@ -2,11 +2,16 @@ import { BaseExtractor, Track, ExtractorInfo, ExtractorSearchContext, SearchQuer
 import { Readable } from 'stream';
 import { execFile, spawn } from 'child_process';
 import { promisify } from 'util';
+import * as path from 'path';
+import * as fs from 'fs';
 
 const execFileAsync = promisify(execFile);
 
 // yt-dlp binary yolu: Linux'ta PATH'te olur, Windows'ta env ile ayarlanabilir
 const YT_DLP_PATH = process.env.YT_DLP_PATH || 'yt-dlp';
+
+// Cookie dosyası yolu
+const COOKIES_PATH = path.join(process.cwd(), 'cookies.txt');
 
 interface YtDlpVideoInfo {
     title: string;
@@ -21,6 +26,13 @@ interface YtDlpVideoInfo {
 
 export class YtDlpExtractor extends BaseExtractor {
     static identifier = 'com.custom.ytdlp-extractor' as const;
+
+    private getCookieArgs(): string[] {
+        if (fs.existsSync(COOKIES_PATH)) {
+            return ['--cookies', COOKIES_PATH];
+        }
+        return [];
+    }
 
     private isYouTubeUrl(query: string): boolean {
         return /(?:youtube\.com|youtu\.be|music\.youtube\.com)/.test(query);
@@ -52,6 +64,7 @@ export class YtDlpExtractor extends BaseExtractor {
                 '--no-playlist',
                 '--no-warnings',
                 '--flat-playlist',
+                ...this.getCookieArgs(),
                 searchQuery
             ], { timeout: 15000 });
 
@@ -85,6 +98,7 @@ export class YtDlpExtractor extends BaseExtractor {
             '--no-playlist',
             '--no-warnings',
             '--quiet',
+            ...this.getCookieArgs(),
             track.url
         ]);
 
