@@ -5,14 +5,16 @@ import { TextChannel } from "discord.js";
 export default (player: Player) => {
 
     player.events.on("playerStart", (queue: GuildQueue, track: Track) => {
-        // metadata is what we passed in play() options
         const metadata = queue.metadata as any;
-        if (metadata && metadata.channel) {
-            metadata.channel.send(`🎶 Çalıyor: **${track.title}**`);
-        } else if (metadata && metadata.editReply) {
-            // If we want to send a separate message or edit the interaction response?
-            // Usually better to send a new message in the channel
-            // interaction.channel is available
+        if (metadata?.channel && typeof metadata.channel.send === 'function') {
+            metadata.channel.send(`🎶 Çalıyor: **${track.title}**`).catch(console.error);
+        }
+    });
+
+    player.events.on("emptyQueue", (queue: GuildQueue) => {
+        const metadata = queue.metadata as any;
+        if (metadata?.channel && typeof metadata.channel.send === 'function') {
+            metadata.channel.send("✅ Kuyruk bitti, başka şarkı kalmadı.").catch(console.error);
         }
     });
 

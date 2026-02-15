@@ -9,22 +9,24 @@ const command: Command = {
     run: async ({ interaction }) => {
         const queue = useQueue(interaction.guildId!);
 
-        if (!queue || !queue.tracks.toArray().length) {
-            await interaction.reply({ content: "Kuyruk boş.", ephemeral: true });
+        if (!queue || (!queue.currentTrack && !queue.tracks.toArray().length)) {
+            await interaction.reply({ content: "Şu anda çalan bir şarkı ve kuyrukta bekleyen şarkı yok.", ephemeral: true });
             return;
         }
 
         const tracks = queue.tracks.toArray();
         const currentTrack = queue.currentTrack;
 
-        const list = tracks.slice(0, 10).map((track, i) => {
-            return `${i + 1}. **${track.title}** - ${track.author}`;
-        }).join("\n");
+        const list = tracks.length > 0
+            ? tracks.slice(0, 10).map((track, i) => {
+                return `${i + 1}. **${track.title}** - ${track.author}`;
+            }).join("\n")
+            : "Kuyrukta başka şarkı yok.";
 
         await interaction.reply({
             embeds: [{
                 title: "Müzik Kuyruğu",
-                description: `**Çalıyor:** ${currentTrack?.title}\n\n${list}\n\n${tracks.length > 10 ? `...ve ${tracks.length - 10} şarkı daha.` : ""}`,
+                description: `**Çalıyor:** ${currentTrack?.title || "Yok"}\n\n${list}\n\n${tracks.length > 10 ? `...ve ${tracks.length - 10} şarkı daha.` : ""}`,
                 color: 0x5865F2,
                 footer: { text: "STP&ARCHE Bot" }
             }]

@@ -1,7 +1,6 @@
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import { Player } from 'discord-player';
 import { DefaultExtractors } from '@discord-player/extractor';
-// import { YoutubeiExtractor } from "discord-player-youtubei"; // Removing this
 import { PlayDLExtractor } from "../extractors/PlayDLExtractor";
 import ffmpeg from 'ffmpeg-static';
 
@@ -38,10 +37,6 @@ export class ExtendedClient extends Client {
         await this.player.extractors.loadMulti(DefaultExtractors);
 
         console.log("Extractors loaded:", this.player.extractors.store.keys());
-
-        // Debug listener
-        this.player.events.on('error', (queue, error) => console.log(`[PlayerError] ${error.message}`));
-        this.player.events.on('playerError', (queue, error) => console.log(`[ConnectionError] ${error.message}`));
 
         await this.login(process.env.DISCORD_TOKEN);
     }

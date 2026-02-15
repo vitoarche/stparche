@@ -32,7 +32,7 @@ export default {
                 newLevel++;
                 newXp -= nextLevel;
                 if ("send" in message.channel) {
-                    message.channel.send(`🎉 Tebrikler ${message.author}! Seviye atladın! Yeni Seviye: **${newLevel}**`);
+                    await message.channel.send(`🎉 Tebrikler ${message.author}! Seviye atladın! Yeni Seviye: **${newLevel}**`).catch(console.error);
                 }
             }
 

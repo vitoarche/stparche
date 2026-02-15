@@ -1,6 +1,6 @@
 import { ColorResolvable } from "discord.js";
 
-export const config = {
+export const botConfig = {
     colors: {
         primary: "#5865F2" as ColorResolvable,
         success: "#57F287" as ColorResolvable,

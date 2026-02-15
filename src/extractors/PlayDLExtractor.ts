@@ -34,11 +34,11 @@ export class PlayDLExtractor extends BaseExtractor {
             if (validation === 'yt_video') {
                 const info = await play.video_info(query);
                 const track = new Track(this.context.player, {
-                    title: info.video_details.title,
-                    description: info.video_details.description,
+                    title: info.video_details.title || "Bilinmeyen Şarkı",
+                    description: info.video_details.description || "",
                     author: info.video_details.channel?.name || "Unknown",
                     url: info.video_details.url,
-                    thumbnail: info.video_details.thumbnails[0].url,
+                    thumbnail: info.video_details.thumbnails?.[0]?.url || "",
                     duration: info.video_details.durationInSec.toString(),
                     views: info.video_details.views,
                     requestedBy: context.requestedBy,
@@ -52,20 +52,17 @@ export class PlayDLExtractor extends BaseExtractor {
                 const videos = await playlistInfo.all_videos();
                 const tracks = videos.map((v) => {
                     return new Track(this.context.player, {
-                        title: v.title!,
-                        description: v.description,
+                        title: v.title || "Bilinmeyen Şarkı",
+                        description: v.description || "",
                         author: v.channel?.name || "Unknown",
                         url: v.url,
-                        thumbnail: v.thumbnails[0].url,
+                        thumbnail: v.thumbnails?.[0]?.url || "",
                         duration: v.durationInSec.toString(),
                         views: v.views,
                         requestedBy: context.requestedBy,
                         source: "youtube"
                     });
                 });
-                // We're not creating a Playlist object here for simplicity, or we can:
-                // const pl = new Playlist(this.context.player, { ... })
-                // return { playlist: pl, tracks: tracks };
                 return { playlist: null, tracks: tracks };
             }
 
@@ -75,11 +72,11 @@ export class PlayDLExtractor extends BaseExtractor {
 
                 const v = results[0];
                 const track = new Track(this.context.player, {
-                    title: v.title!,
-                    description: v.description,
+                    title: v.title || "Bilinmeyen Şarkı",
+                    description: v.description || "",
                     author: v.channel?.name || "Unknown",
                     url: v.url,
-                    thumbnail: v.thumbnails[0].url,
+                    thumbnail: v.thumbnails?.[0]?.url || "",
                     duration: v.durationInSec.toString(),
                     views: v.views,
                     requestedBy: context.requestedBy,

@@ -1,7 +1,9 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 
-const db = new Database(path.join(__dirname, '../../database.sqlite'));
+// process.cwd() ile proje kök dizininden database.sqlite yolunu çözümle
+// Bu sayede hem ts-node (dev) hem de node dist/ (prod) modunda aynı dosyaya erişilir
+const db = new Database(path.join(process.cwd(), 'database.sqlite'));
 
 // Initialize tables
 db.prepare(`

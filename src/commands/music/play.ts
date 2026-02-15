@@ -28,11 +28,11 @@ const command: Command = {
         try {
             const { track } = await player.play(member.voice.channel, query, {
                 nodeOptions: {
-                    metadata: interaction
+                    metadata: { channel: interaction.channel, interaction: interaction }
                 }
             });
 
-            await interaction.editReply(`🎶 **${track.title}** çalınıyor!`);
+            await interaction.editReply(`🎶 **${track.title}** sıraya eklendi!`);
         } catch (e) {
             console.log(`Main play attempt failed: ${e}`);
             // Fallback: If it's a URL and failed, try to get title via play-dl and search
@@ -44,9 +44,9 @@ const command: Command = {
                     if (title) {
                         await interaction.editReply(`⚠️ Link doğrudan çalınamadı, ismiyle aranıyor: **${title}**...`);
                         const { track } = await player.play(member.voice.channel, title, {
-                            nodeOptions: { metadata: interaction }
+                            nodeOptions: { metadata: { channel: interaction.channel, interaction: interaction } }
                         });
-                        await interaction.editReply(`🎶 **${track.title}** çalınıyor! (Alternatif yöntem)`);
+                        await interaction.editReply(`🎶 **${track.title}** sıraya eklendi! (Alternatif yöntem)`);
                         return;
                     }
                 }

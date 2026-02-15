@@ -17,12 +17,19 @@ const command: Command = {
             return;
         }
 
+        const nextLevelXp = user.level * 100;
+        const progressPercent = Math.floor((user.xp / nextLevelXp) * 100);
+        const barLength = 10;
+        const filledBars = Math.round((user.xp / nextLevelXp) * barLength);
+        const progressBar = "█".repeat(filledBars) + "░".repeat(barLength - filledBars);
+
         const embed = new EmbedBuilder()
             .setColor(0x5865F2)
             .setTitle(`Rank: ${target.username}`)
             .addFields(
                 { name: 'Level', value: `${user.level}`, inline: true },
-                { name: 'XP', value: `${user.xp}`, inline: true }
+                { name: 'XP', value: `${user.xp} / ${nextLevelXp}`, inline: true },
+                { name: 'İlerleme', value: `${progressBar} %${progressPercent}`, inline: false }
             )
             .setThumbnail(target.displayAvatarURL());
 

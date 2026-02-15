@@ -6,7 +6,7 @@ const command: Command = {
         .setName("timeout")
         .setDescription("Bir kullanıcıya zamanaşımı (timeout) uygular.")
         .addUserOption(option => option.setName("target").setDescription("Kullanıcı").setRequired(true))
-        .addIntegerOption(option => option.setName("duration").setDescription("Süre (dakika)").setRequired(true))
+        .addIntegerOption(option => option.setName("duration").setDescription("Süre (dakika, maks 40320)").setRequired(true).setMinValue(1).setMaxValue(40320))
         .addStringOption(option => option.setName("reason").setDescription("Sebep"))
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
     run: async ({ interaction }) => {
