@@ -1,10 +1,10 @@
 import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import { Player } from 'discord-player';
 import { DefaultExtractors } from '@discord-player/extractor';
-import { PlayDLExtractor } from "../extractors/PlayDLExtractor";
+import { YtDlpExtractor } from '../extractors/YtDlpExtractor';
 import ffmpeg from 'ffmpeg-static';
 
-process.env.FFMPEG_PATH = ffmpeg || 'ffmpeg'; // Force FFmpeg path
+process.env.FFMPEG_PATH = ffmpeg || 'ffmpeg';
 
 export class ExtendedClient extends Client {
     public commands: Collection<string, any> = new Collection();
@@ -26,14 +26,10 @@ export class ExtendedClient extends Client {
     }
 
     public async start() {
-        // await this.player.extractors.loadMulti(DefaultExtractors);
+        // YtDlpExtractor: yt-dlp binary üzerinden YouTube stream (en stabil yöntem)
+        await this.player.extractors.register(YtDlpExtractor, {});
 
-        // Register Custom PlayDL Extractor
-        await this.player.extractors.register(PlayDLExtractor, {});
-
-        // Load Defaults AFTER custom to ensure custom has priority? 
-        // Or just don't load defaults for now to see if PlayDL works in isolation.
-        // Let's load defaults after.
+        // Diğer extractor'lar (SoundCloud, Spotify, Apple Music vb.)
         await this.player.extractors.loadMulti(DefaultExtractors);
 
         console.log("Extractors loaded:", this.player.extractors.store.keys());

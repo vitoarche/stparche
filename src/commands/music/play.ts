@@ -34,27 +34,8 @@ const command: Command = {
 
             await interaction.editReply(`🎶 **${track.title}** sıraya eklendi!`);
         } catch (e) {
-            console.log(`Main play attempt failed: ${e}`);
-            // Fallback: If it's a URL and failed, try to get title via play-dl and search
-            try {
-                const play = await import('play-dl');
-                if (await play.validate(query) === 'yt_video') {
-                    const info = await play.video_info(query);
-                    const title = info.video_details.title;
-                    if (title) {
-                        await interaction.editReply(`⚠️ Link doğrudan çalınamadı, ismiyle aranıyor: **${title}**...`);
-                        const { track } = await player.play(member.voice.channel, title, {
-                            nodeOptions: { metadata: { channel: interaction.channel, interaction: interaction } }
-                        });
-                        await interaction.editReply(`🎶 **${track.title}** sıraya eklendi! (Alternatif yöntem)`);
-                        return;
-                    }
-                }
-            } catch (fallbackError) {
-                console.error("Fallback failed:", fallbackError);
-            }
-
-            await interaction.editReply(`❌ Bir hata oluştu: ${e}`);
+            console.error(`Play failed: ${e}`);
+            await interaction.editReply(`❌ Şarkı çalınamadı. Lütfen farklı bir link veya arama terimi deneyin.`);
         }
     }
 }

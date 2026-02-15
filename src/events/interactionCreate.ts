@@ -14,10 +14,15 @@ export default {
             await command.run({ interaction, client });
         } catch (error) {
             console.error(error);
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: "Komut çalıştırılırken bir hata oluştu!", ephemeral: true });
-            } else {
-                await interaction.reply({ content: "Bir hata oluştu!", ephemeral: true });
+            try {
+                if (interaction.replied || interaction.deferred) {
+                    await interaction.followUp({ content: "Komut çalıştırılırken bir hata oluştu!", ephemeral: true });
+                } else {
+                    await interaction.reply({ content: "Bir hata oluştu!", ephemeral: true });
+                }
+            } catch (e) {
+                // Interaction süresi dolmuş olabilir, sessizce logla
+                console.error("Error handler failed:", e);
             }
         }
     }
