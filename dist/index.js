@@ -65,4 +65,6 @@ const loadHandlers = async () => {
     }
 };
 loadHandlers();
-exports.client.start();
+(async () => {
+    await exports.client.start();
+})();

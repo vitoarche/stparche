@@ -13,7 +13,12 @@ exports.default = {
         }
         catch (error) {
             console.error(error);
-            await interaction.reply({ content: "Bir hata oluştu!", ephemeral: true });
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({ content: "Komut çalıştırılırken bir hata oluştu!", ephemeral: true });
+            }
+            else {
+                await interaction.reply({ content: "Bir hata oluştu!", ephemeral: true });
+            }
         }
     }
 };
